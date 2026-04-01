@@ -413,7 +413,29 @@
       }
     }
 
-    // Utility functions
+    // Utility functions to handle risk level logic as requested
+    function updateRiskStatus(utilization) {
+      if (utilization > 1.2) {
+        return { level: 'Rất cao', style: 'bg-red-100 text-red-700', barColor: 'bg-red-600', perfColor: 'text-red-700' };
+      } else if (utilization > 1.0) {
+        return { level: 'Cao', style: 'bg-orange-100 text-orange-700', barColor: 'bg-orange-500', perfColor: 'text-orange-700' };
+      } else if (utilization >= 0.7) {
+        return { level: 'Trung bình', style: 'bg-blue-100 text-blue-700', barColor: 'bg-blue-500', perfColor: 'text-blue-700' };
+      } else {
+        return { level: 'Thấp', style: 'bg-emerald-100 text-emerald-700', barColor: 'bg-emerald-500', perfColor: 'text-emerald-700' };
+      }
+    }
+
+    function translateOverloadRisk(label) {
+      const map = {
+        'Very High': 'Rất cao',
+        'High': 'Cao',
+        'Medium': 'Trung bình',
+        'Low': 'Thấp'
+      };
+      return map[label] || label;
+    }
+
     function showToast(message) {
       const toast = document.getElementById('toast');
       const toastMsg = document.getElementById('toast-message');
@@ -506,13 +528,13 @@
           departmentsConfig['noi'].basePatients = parseInt(morning.forecast_total_patients) || departmentsConfig['noi'].basePatients;
           departmentsConfig['noi'].baseDocs = parseInt(morning.current_doctor) || departmentsConfig['noi'].baseDocs;
           departmentsConfig['noi'].baseMissing = Math.max(0, (parseInt(morning.required_doctor) || 0) - (parseInt(morning.current_doctor) || 0));
-          departmentsConfig['noi'].riskLevel = morning.overload_risk_label || departmentsConfig['noi'].riskLevel;
+          departmentsConfig['noi'].riskLevel = translateOverloadRisk(morning.overload_risk_label);
           departmentsConfig['noi'].morningDesc = `Đang diễn ra • ${morning.current_doctor} BS đang trực`;
-          departmentsConfig['noi'].morningRisk = morning.overload_risk_label === 'Very High' ? 'Cao' : (morning.overload_risk_label === 'High' ? 'Trung bình' : 'Thấp');
+          departmentsConfig['noi'].morningRisk = translateOverloadRisk(morning.overload_risk_label);
         }
         if (afternoon) {
           departmentsConfig['noi'].afternoonDesc = `Sắp tới • Dự báo ${afternoon.forecast_total_patients} bệnh nhân`;
-          departmentsConfig['noi'].afternoonRisk = afternoon.overload_risk_label === 'Very High' ? 'Cao' : (afternoon.overload_risk_label === 'High' ? 'Trung bình' : 'Thấp');
+          departmentsConfig['noi'].afternoonRisk = translateOverloadRisk(afternoon.overload_risk_label);
         }
       }
 
@@ -560,7 +582,17 @@
         const pOverload = key === 'noi' ? overloadCount : generateRandomVariation(d.baseOverload, currentDate);
         const pDocs = targetTotalPatients === 0 ? 0 : generateRandomVariation(d.baseDocs, currentDate);
         const pMissing = targetTotalPatients === 0 ? 0 : (key === 'noi' ? d.baseMissing : generateRandomVariation(d.baseMissing, currentDate));
-        const pPerf = targetTotalPatients === 0 ? 0 : (key === 'noi' ? Math.min(100, Math.floor((pPatients / (Math.max(1, pDocs) * 30)) * 100)) : Math.min(100, Math.max(50, generateRandomVariation(d.perf, currentDate))));
+        
+        // Calculate Utilization and Performance
+        const utilization = targetTotalPatients === 0 ? 0 : (pPatients / (Math.max(1, pDocs) * 30));
+        const pPerf = Math.floor(utilization * 100);
+        
+        // Update Risk Metadata dynamically based on utilization formula
+        const riskMeta = updateRiskStatus(utilization);
+        const currentRiskLevel = targetTotalPatients === 0 ? 'Thấp' : riskMeta.level;
+        const currentRiskStyle = targetTotalPatients === 0 ? 'bg-emerald-100 text-emerald-700' : riskMeta.style;
+        const currentBarColor = targetTotalPatients === 0 ? 'bg-emerald-500' : riskMeta.barColor;
+        const currentPerfColor = targetTotalPatients === 0 ? 'text-emerald-700' : riskMeta.perfColor;
 
         // Add to aggregate numerical sum
         sumPatients += pPatients;
@@ -585,12 +617,12 @@
               <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
                   <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
-                    <div class="h-full ${d.barColor}" style="width: ${pPerf}%"></div>
-                  </div><span class="text-xs font-bold ${d.perfColor}">${pPerf}%</span>
+                    <div class="h-full ${currentBarColor}" style="width: ${Math.min(100, pPerf)}%"></div>
+                  </div><span class="text-xs font-bold ${currentPerfColor}">${pPerf}%</span>
                 </div>
               </td>
               <td class="px-6 py-4 text-center font-medium">${pDocs.toString().padStart(2, '0')} BS</td>
-              <td class="px-6 py-4"><span class="px-3 py-1 ${d.riskStyle} rounded-full text-[11px] font-bold">${d.riskLevel}</span></td>
+              <td class="px-6 py-4"><span class="px-3 py-1 ${currentRiskStyle} rounded-full text-[11px] font-bold">${currentRiskLevel}</span></td>
               <td class="px-6 py-4 text-right"><button class="p-2 hover:bg-slate-100 rounded-full transition-colors"><span class="material-symbols-outlined text-slate-400">chevron_right</span></button></td>
             </tr>
           `;
