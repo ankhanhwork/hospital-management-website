@@ -235,20 +235,20 @@
     const allStaff = [
         // Males
         { id: 1, name: 'BS. Lê Nam Hải', gender: 'M', spriteIndex: 0, role: 'Bác sĩ trực', dept: 'Cấp cứu', status: 'Đang trực', experience: '6 năm', currentShift: 'Ca Sáng (06:00 - 14:00)' },
-        { id: 3, name: 'ĐD. Nguyễn Văn Tùng', gender: 'M', spriteIndex: 1, role: 'Điều phối viên', dept: 'Nội Tổng Quát', status: 'Đang điều phối', experience: '5 năm', currentShift: 'Hỗ trợ Phân bổ Tầng 3' },
+        { id: 3, name: 'BS. Nguyễn Văn Tùng', gender: 'M', spriteIndex: 1, role: 'Bác sĩ trực', dept: 'Nội Tổng Quát', status: 'Đang điều phối', experience: '5 năm', currentShift: 'Hỗ trợ Phân bổ Tầng 3' },
         { id: 7, name: 'BS. Đặng Việt Cường', gender: 'M', spriteIndex: 2, role: 'Bác sĩ trực', dept: 'Thần Kinh', status: 'Đang trực', experience: '4 năm', currentShift: 'Ca Sáng (06:00 - 14:00)' },
-        { id: 9, name: 'ĐD. Trần Hùng', gender: 'M', spriteIndex: 3, role: 'Điều dưỡng viên', dept: 'Cấp cứu', status: 'Đang trực', experience: '3 năm', currentShift: 'Khu vực Hồi sức đỏ' },
+        { id: 9, name: 'BS. Trần Hùng', gender: 'M', spriteIndex: 3, role: 'Bác sĩ trực', dept: 'Cấp cứu', status: 'Đang trực', experience: '3 năm', currentShift: 'Khu vực Hồi sức đỏ' },
         { id: 4, name: 'BS. Phạm Hoàng Long', gender: 'M', spriteIndex: 4, role: 'Trưởng ca', dept: 'Cấp cứu', status: 'Nghỉ phép', experience: '15 năm', currentShift: 'Nghỉ phép năm (Đến 05/06)' },
         { id: 10, name: 'BS. Bùi Quang Tuấn', gender: 'M', spriteIndex: 5, role: 'Trưởng ca', dept: 'Ngoại Khoa', status: 'Sẵn sàng', experience: '18 năm', currentShift: 'Chuyên môn hội chẩn' },
         { id: 13, name: 'BS. Phan Anh Tú', gender: 'M', spriteIndex: 6, role: 'Bác sĩ trực', dept: 'Thần Kinh', status: 'Đang trực', experience: '14 năm', currentShift: 'Gác trực IC' },
-        { id: 15, name: 'ĐD. Đỗ Duy Khoa', gender: 'M', spriteIndex: 7, role: 'Điều phối viên', dept: 'Cấp cứu', status: 'Sẵn sàng', experience: '11 năm', currentShift: 'Trực máy điều phối T4' },
+        { id: 15, name: 'BS. Đỗ Duy Khoa', gender: 'M', spriteIndex: 7, role: 'Bác sĩ trực', dept: 'Cấp cứu', status: 'Sẵn sàng', experience: '11 năm', currentShift: 'Trực máy điều phối T4' },
         
         // Females
         { id: 5, name: 'BS. Vũ Thùy Linh', gender: 'F', spriteIndex: 0, role: 'Chuyên khoa', dept: 'Ngoại Khoa', status: 'Sẵn sàng', experience: '7 năm', currentShift: 'On-call ưu tiên' },
         { id: 11, name: 'BS. Võ Thị Trang', gender: 'F', spriteIndex: 1, role: 'Bác sĩ trực', dept: 'Tim Mạch', status: 'Nghỉ phép', experience: '4 năm', currentShift: 'Thai sản (Đến 12/08)' },
-        { id: 12, name: 'ĐD. Hoàng Thanh Mai', gender: 'F', spriteIndex: 2, role: 'Điều dưỡng viên', dept: 'Nội Tổng Quát', status: 'Sẵn sàng', experience: '2 năm', currentShift: 'Dự phòng Ca Chiều' },
+        { id: 12, name: 'BS. Hoàng Thanh Mai', gender: 'F', spriteIndex: 2, role: 'Bác sĩ trực', dept: 'Nội Tổng Quát', status: 'Sẵn sàng', experience: '2 năm', currentShift: 'Dự phòng Ca Chiều' },
         { id: 2, name: 'BS. Trần Kim Oanh', gender: 'F', spriteIndex: 3, role: 'Chuyên khoa', dept: 'Tim Mạch', status: 'Sẵn sàng', experience: '5 năm', currentShift: 'Ca trực tiếp theo: Tối' },
-        { id: 6, name: 'ĐD. Lê Ánh Nguyệt', gender: 'F', spriteIndex: 4, role: 'Điều dưỡng trưởng', dept: 'Tim Mạch', status: 'Bận', experience: '14 năm', currentShift: 'Đang trực Phòng mổ 2' },
+        { id: 6, name: 'BS. Lê Ánh Nguyệt', gender: 'F', spriteIndex: 4, role: 'Bác sĩ chuyên khoa', dept: 'Tim Mạch', status: 'Bận', experience: '14 năm', currentShift: 'Đang trực Phòng mổ 2' },
         { id: 8, name: 'BS. Mai Phương Chi', gender: 'F', spriteIndex: 5, role: 'Chuyên khoa', dept: 'Nội Tổng Quát', status: 'Sẵn sàng', experience: '15 năm', currentShift: 'Khám ngoại trú (Phòng 102)' },
         { id: 14, name: 'BS. Lý Phương Lan', gender: 'F', spriteIndex: 6, role: 'Chuyên khoa', dept: 'Nội Tổng Quát', status: 'Đang điều phối', experience: '12 năm', currentShift: 'Hỗ trợ Khoa Lây nhiễm' },
         { id: 16, name: 'BS. Trịnh Hải Băng', gender: 'F', spriteIndex: 7, role: 'Trưởng ca', dept: 'Thần Kinh', status: 'Bận', experience: '20 năm', currentShift: 'Đang tham gia Hội thảo' }
