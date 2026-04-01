@@ -942,24 +942,29 @@
                 const shiftDate = `2026-${m}-${d}`;
                 const shiftName = selectedCell.dataset.shift === 'Sáng' ? 'Morning' : 'Afternoon';
                 const docsCount = state.assigned.length;
-                const fullUrl = `${GAS_URL}?action=updateDoctor&date=${shiftDate}&shift=${shiftName}&doctors=${docsCount}`;
+                const docNames = state.assigned.map(s => s.name).join(', ');
+                
+                // Cache buster and unified parameters (doctors + current_doctor)
+                const fullUrl = `${GAS_URL}?action=updateDoctor&date=${shiftDate}&shift=${shiftName}&doctors=${docsCount}&current_doctor=${docsCount}&doctor_names=${encodeURIComponent(docNames)}&_=${Date.now()}`;
+                
                 console.log('Syncing to Google Sheets:', fullUrl);
-
                 showToast('Đang đồng bộ với Google Sheets...');
-                try {
-                    // Using a script tag for a true 'fire and forget' cross-origin request that avoids CORS completely
-                    const script = document.createElement('script');
-                    script.src = fullUrl;
-                    document.body.appendChild(script);
 
-                    // Since we can't easily detect success of a cross-origin script tag without JSONP, 
-                    // we'll assume it sent and show success after a short delay
-                    setTimeout(() => {
+                try {
+                    // Use fetch with no-cors to avoid DOM pollution and syntax errors
+                    fetch(fullUrl, { mode: 'no-cors' })
+                    .then(() => {
                         showToast('Đã gửi yêu cầu cập nhật lên Google Sheet!');
-                    }, 1000);
+                        // Optional: Refresh local data after 2 seconds to see the change
+                        setTimeout(() => fetchSheetData(), 2000);
+                    })
+                    .catch(err => {
+                        console.error('Fetch error:', err);
+                        showToast('Lỗi kết nối khi gửi dữ liệu.');
+                    });
                 } catch (error) {
                     console.error('Error updating sheet:', error);
-                    showToast('Lỗi khi gửi dữ liệu.');
+                    showToast('Lỗi khi chuẩn bị dữ liệu.');
                 }
             } else {
                 showToast('Cập nhật thành công! Phân bổ nhân sự đã được lưu.');
